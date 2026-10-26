@@ -1,84 +1,222 @@
-# 🤟 Signvrse Terp for Web (Terp-Web)
-### *Next-Generation Web Accessibility & Sign Language Video Interpretation Platform*
+**The Installation Process of TerpWeb Documentation.**
 
-[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-blue.svg)](LICENSE)
-[![Java: 25](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.org/)
-[![Spring Boot: 3.5.3](https://img.shields.io/badge/Spring_Boot-3.5.3-6DB33F.svg)](https://spring.io/projects/spring-boot)
-[![Next.js: 16](https://img.shields.io/badge/Next.js-16.1.3-black.svg)](https://nextjs.org/)
-[![React: 19](https://img.shields.io/badge/React-19.2-61DAFB.svg)](https://react.dev/)
-[![TypeScript: 5.3](https://img.shields.io/badge/TypeScript-5.3-3178C6.svg)](https://www.typescriptlang.org/)
-[![WCAG: 2.2 Ready](https://img.shields.io/badge/WCAG-2.2_Ready-success.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+## 1. Install the prerequisites
 
----
+Open PowerShell and install Git, Node.js, Java 25, and Docker Desktop:
 
-## 📌 Executive Summary
-
-**Signvrse Terp for Web** is an enterprise-grade digital accessibility platform that breaks communication barriers on the internet. By combining **intelligent DOM scanning**, **viewport-synchronized sign language interpretation (Kenyan Sign Language / KSL & International Sign)**, and a **comprehensive digital accessibility suite**, Terp-Web transforms standard websites into inclusive digital spaces for the Deaf and Hard-of-Hearing (D/HH) community—all through a single line of JavaScript.
-
-Website owners can onboard their domain, visually select and map content sections, and have certified sign language interpreters produce synchronized video translations. End-users experience smooth, non-intrusive, interactive video overlays that automatically follow page scroll, respond to user gestures, and adapt to individual accessibility needs (dyslexia fonts, contrast controls, text-to-speech, and voice dictation).
-
----
-
-## 🎯 The Problem & Social Impact
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│  466M+ People Worldwide with Disabling Hearing Loss                                    │
-│  Sign Language is often their FIRST & NATURAL language (text is a secondary language) │
-│  < 3% of global websites offer native sign language accessibility                     │
-└────────────────────────────────────────────────────────────────────────────────────────┘
+```powershell
+winget install --id Git.Git --exact
+winget install --id OpenJS.NodeJS.LTS --exact
+winget install --id EclipseAdoptium.Temurin.25.JDK --exact
+winget install --id Docker.DockerDesktop --exact
 ```
 
-* **Cognitive Barrier**: For many culturally Deaf individuals, written text is a second language with different syntactic and grammatical rules compared to native sign languages.
-* **Legal & Regulatory Compliance**: Global legislation (e.g., European Accessibility Act 2025, US Section 508, ADA Title III, and Kenya Persons with Disabilities Act) increasingly mandates barrier-free digital access.
-* **Frictionless Inclusion**: Traditional website accessibility tools only offer basic color inversion or machine text-to-speech, completely omitting the Deaf community. **Terp-Web bridges this critical divide.**
+If an installer asks you to restart, do so. Then launch **Docker Desktop** and wait for it to finish starting. Verify the tools are available in a new PowerShell window:
 
----
+```powershell
+git --version
+node --version
+npm --version
+java -version
+docker compose version
+```
 
-## 🌟 Key Platform Features
+The backend requires Java 25. Docker Desktop supplies PostgreSQL for the local app.
 
-### 1. 🪟 Interactive Client Widget (`/widget`)
-* **Zero-Dependency & Ultra-Lightweight**: Built with TypeScript and bundled via `esbuild` into an optimized distribution (~25KB gzipped) with zero external runtime dependencies.
-* **Draggable & Resizable Avatar Panel**: Users can freely reposition, collapse, expand, or adjust the video player window anywhere on screen.
-* **Smart DOM & Viewport Synchronization**: Leverages `IntersectionObserver` and `MutationObserver` to automatically highlight content sections, reveal sign language indicator icons, and queue relevant interpretation videos as users navigate.
-* **Touch & Gesture Recognition**: Integrated touch gestures (e.g., swipe right on target elements) to trigger instant sign interpretation on mobile and tablet devices.
-* **Full-Spectrum Accessibility Toolbar**:
-  * 🔤 **Dyslexia-Friendly Typography** (OpenDyslexic style adjustments)
-  * 🌓 **Contrast & Color Tools**: High contrast, invert colors, grayscale, dark mode
-  * 🔍 **Visual Guides**: Text scaling (100%–150%), line-height, letter-spacing, large cursor, and reading mask
-  * 🗣️ **Voice Tools**: Built-in Web Speech API Text-to-Speech (TTS VoiceOver) and speech-to-text Voice Dictation
+## 2. Clone the repository
 
-### 2. 🔍 Automated Visual Scanner & Route Detection (`/backend` + `/dashboard`)
-* **Dual-Engine Web Scraper**: Powered by **Jsoup** (for ultra-fast static HTML analysis) and **Playwright (Headless Chromium)** (for JavaScript-heavy, client-rendered SPAs).
-* **Automated Route Discovery**: Crawls target domains and sitemaps to detect available routes, pages, and headings automatically.
-* **Interactive Visual Bounding Box Tool**: Administrative dashboard lets teams inspect full-page screenshots, filter DOM nodes by tag (`H1`–`H6`, `P`, `LI`, `BUTTON`, `IMG`), and draw custom bounding boxes for targeted video translations.
+These commands clone the project into a `src` folder under your Windows user profile:
 
-### 3. 🎬 Quality-Assured Studio Workflow & Gemini Agent Validation
-* **Interpreter / Animator Workspace**: Dedicated studio interface for managing script sections, recording sign language interpretations, and tracking production status.
-* **Gemini Agent Verification**: The workflow features automated handovers to **Gemini Agents** to verify and ensure the correctness, contextual precision, and quality of all output translations and content mappings before publishing.
-* **Seamless Media Pipeline**: Streamlined video asset processing and delivery pipeline ensuring synchronized, high-definition sign playback with zero broken links.
+```powershell
+New-Item -ItemType Directory -Force "$HOME\src" | Out-Null
+Set-Location "$HOME\src"
+git clone https://github.com/signvrse/terp-for-web.git
+Set-Location "$HOME\src\terp-for-web"
+```
 
-### 4. 🏢 Business Portal & Enterprise Billing
-* **Self-Service Dashboard**: Client management of pages, API keys, and widget customization (placement, branding colors, theme).
-* **Tiered Subscription Engine**: Integration with **Paystack** for monthly/annual recurring billing, automatic tier synchronization, setup fee handling, and view-based overage tracking.
-* **Real-time Telemetry & Analytics**: Session tracking, section watch durations, engagement metrics, and monthly view limits.
-* **System-wide Broadcast & Alerts**: Global banner notification system and transactional/broadcast email infrastructure.
+## 3. Install dashboard dependencies and start the database
 
----
+From the repository directory:
 
-## 💻 Tech Stack & Infrastructure
+```powershell
+Set-Location "$HOME\src\terp-for-web\dashboard"
+npm ci
+```
 
-| Layer | Technologies | Description |
-| :--- | :--- | :--- |
-| **Backend API** | **Java 25, Spring Boot 3.5.3** | High-performance reactive and REST controllers, Spring Data JPA, Spring Security |
-| **AI & Validation** | **Gemini Agents** | Automated handovers for translation verification, quality assurance, and output correctness |
-| **Web Crawling** | **Microsoft Playwright, Jsoup** | Headless browser page scanning, bounding-box coordinate detection, full-page screenshots |
-| **Database** | **PostgreSQL 16** | Relational schemas with UUIDs, JSONB metadata, foreign-key indexing |
-| **Caching & Security** | **Redis 7, Asymmetric RSA-256 JWT** | Sub-millisecond rate-limiting, session revocation, token blacklisting |
-| **Frontend Portal** | **Next.js 16.1.3, React 19, TypeScript** | Responsive web dashboard, Server & Client Components, CSS design system |
-| **Embed Widget** | **TypeScript, esbuild, CSS Tokens** | Zero-dependency standalone JavaScript library (< 30KB bundle) |
-| **Payments** | **Paystack API** | Recurring subscription plans, webhook handlers, local currency (KES) checkout |
-| **Communications** | **SendGrid API** | Automated transactional emails, verification links, broadcast announcements |
-| **Containers** | **Docker & Docker Compose** | Multi-stage Dockerfiles with Playwright dependencies pre-configured |
+Then start the PostgreSQL container from the repository’s `docker-compose.yml`. Leave Docker Desktop running:
 
----
+```powershell
+Set-Location "$HOME\src\terp-for-web"
+docker compose up -d db
+docker compose ps
+```
+
+The database is configured for local development on port `5433`, with username and password `postgres`.
+
+## 4. Start the backend API
+
+Open a **second PowerShell window** and paste this block. It creates temporary signing keys for local development and starts the API. The first run may take several minutes while Maven downloads dependencies.
+
+```powershell
+Set-Location "$HOME\src\terp-for-web\backend"
+
+$jdk = "$env:LOCALAPPDATA\Programs\Eclipse Adoptium\jdk-25.0.4.1+1"
+$env:JAVA_HOME = $jdk
+$env:Path = "$jdk\bin;$env:Path"
+
+$env:DB_USER = 'postgres'
+$env:DB_PASS = 'postgres'
+$env:SERVER_ADDRESS = '127.0.0.1'
+$env:SUPER_ADMIN_EMAIL = 'admin@localhost.test'
+$env:SUPER_ADMIN_PASSWORD = 'TerpLocalDev!25'
+
+$keyFile = Join-Path $env:TEMP 'GenerateTerpJwtKeys.java'
+$source = @'
+import java.security.KeyPairGenerator;
+import java.util.Base64;
+
+public class GenerateTerpJwtKeys {
+    public static void main(String[] args) throws Exception {
+        var generator = KeyPairGenerator.getInstance("RSA");
+        generator.initialize(2048);
+        var pair = generator.generateKeyPair();
+        System.out.println("PRIVATE=" + Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded()));
+        System.out.println("PUBLIC=" + Base64.getEncoder().encodeToString(pair.getPublic().getEncoded()));
+    }
+}
+'@
+
+try {
+    [System.IO.File]::WriteAllText($keyFile, $source, [System.Text.Encoding]::ASCII)
+    $keys = @(& "$jdk\bin\java.exe" $keyFile)
+    if ($LASTEXITCODE -ne 0) { throw 'Could not generate local JWT keys.' }
+
+    $env:JWT_PRIVATE_KEY = ($keys | Where-Object { $_ -like 'PRIVATE=*' }).Substring(8)
+    $env:JWT_PUBLIC_KEY = ($keys | Where-Object { $_ -like 'PUBLIC=*' }).Substring(7)
+} finally {
+    Remove-Item -LiteralPath $keyFile -Force -ErrorAction SilentlyContinue
+}
+
+.\mvnw.cmd spring-boot:run
+```
+
+Keep this window open while using the app. The API applies database migrations and creates development data when it starts.
+
+## 5. Start the dashboard
+
+Open a **third PowerShell window**:
+
+```powershell
+Set-Location "$HOME\src\terp-for-web\dashboard"
+$env:NEXT_PUBLIC_API_URL = 'http://127.0.0.1:8080'
+& '.\node_modules\.bin\next.cmd' dev -H 127.0.0.1
+```
+
+Keep this window open too. Open **[http://127.0.0.1:3000](http://127.0.0.1:3000)** in your browser and log in:
+
+- **Email:** `admin@localhost.test`
+- **Password:** `TerpLocalDev!25`
+
+## Next time you run the project
+
+You don’t need to clone or reinstall it again. Start Docker Desktop, then run `docker compose up -d db` from the repository folder. Start the backend and dashboard again using steps 4 and 5.
+
+The API signing keys are generated each time you start the backend, so you’ll need to sign in again after an API restart. Email, Google sign-in, and payments may require real service credentials; they aren’t needed to start the local app.
+
+
+
+
+
+
+Everything is installed and running on this PC now. You can open the dashboard at **[http://127.0.0.1:3000](http://127.0.0.1:3000)** and sign in at **[http://127.0.0.1:3000/login](http://127.0.0.1:3000/login)** using:
+
+- **Email:** `admin@localhost.test`
+- **Password:** `TerpLocalDev!25`
+
+To start it yourself in the future, use three PowerShell windows and leave the API and dashboard windows open while you work.
+
+### 1. Start and check PostgreSQL
+
+PostgreSQL runs as a Windows service; the app database is `terp_db` on port `5433`.
+
+```powershell
+Get-Service postgresql-x64-17
+```
+
+If the service is stopped, start it from an elevated PowerShell window:
+
+```powershell
+Start-Service postgresql-x64-17
+```
+
+Check that the app database is available:
+
+```powershell
+$env:PGPASSWORD = 'postgres'
+& 'C:\Program Files\PostgreSQL\18\bin\psql.exe' -h 127.0.0.1 -p 5433 -U postgres -d terp_db -c 'select 1;'
+Remove-Item Env:PGPASSWORD
+```
+
+### 2. Start the backend API
+
+In the second PowerShell window, paste this block. It generates temporary signing keys for local login, then starts the API; the first run may take a while as Maven downloads its dependencies.
+
+```powershell
+Set-Location 'C:\Users\USER\Desktop\My Sites\terp-for-web\backend'
+
+$jdk = "$env:LOCALAPPDATA\Programs\Eclipse Adoptium\jdk-25.0.4.1+1"
+$env:JAVA_HOME = $jdk
+$env:Path = "$jdk\bin;$env:Path"
+
+$env:DB_USER = 'postgres'
+$env:DB_PASS = 'postgres'
+$env:SERVER_ADDRESS = '127.0.0.1'
+$env:SUPER_ADMIN_EMAIL = 'admin@localhost.test'
+$env:SUPER_ADMIN_PASSWORD = 'TerpLocalDev!25'
+
+$keyFile = Join-Path $env:TEMP 'GenerateTerpJwtKeys.java'
+$source = @'
+import java.security.KeyPairGenerator;
+import java.util.Base64;
+
+public class GenerateTerpJwtKeys {
+    public static void main(String[] args) throws Exception {
+        var generator = KeyPairGenerator.getInstance("RSA");
+        generator.initialize(2048);
+        var pair = generator.generateKeyPair();
+        System.out.println("PRIVATE=" + Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded()));
+        System.out.println("PUBLIC=" + Base64.getEncoder().encodeToString(pair.getPublic().getEncoded()));
+    }
+}
+'@
+
+try {
+    [System.IO.File]::WriteAllText($keyFile, $source, [System.Text.Encoding]::ASCII)
+    $keys = @(& "$jdk\bin\java.exe" $keyFile)
+    if ($LASTEXITCODE -ne 0) { throw 'Could not generate local JWT keys.' }
+
+    $env:JWT_PRIVATE_KEY = ($keys | Where-Object { $_ -like 'PRIVATE=*' }).Substring(8)
+    $env:JWT_PUBLIC_KEY = ($keys | Where-Object { $_ -like 'PUBLIC=*' }).Substring(7)
+} finally {
+    Remove-Item -LiteralPath $keyFile -Force -ErrorAction SilentlyContinue
+}
+
+.\mvnw.cmd spring-boot:run
+```
+
+The API runs at **[http://127.0.0.1:8080](http://127.0.0.1:8080)**. Database migrations and development seed data run automatically.
+
+### 3. Start the dashboard
+
+In the third PowerShell window:
+
+```powershell
+Set-Location 'C:\Users\USER\Desktop\My Sites\terp-for-web\dashboard'
+
+$env:NEXT_PUBLIC_API_URL = 'http://127.0.0.1:8080'
+& '.\node_modules\.bin\next.cmd' dev -H 127.0.0.1
+```
+
+The dashboard runs at **[http://127.0.0.1:3000](http://127.0.0.1:3000)**. If you ever need to reinstall its packages, run `npm ci` from the `dashboard` directory.
+
+**A couple of notes:** the JWT keys are generated for each API launch, so restarting the API invalidates existing sessions; just sign in again. Email delivery, Google sign-in, and payment features may need real service credentials to work. PostgreSQL is currently listening on all network interfaces; I’ve configured it to use localhost on its next restart. Until it’s restarted, don’t use this setup on an untrusted network.
